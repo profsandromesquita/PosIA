@@ -103,15 +103,50 @@ O PyTravelAPP foi projetado para facilitar a análise de pacotes de viagem comer
   - Orquestrar a leitura, análise, exportação e reinicialização do app.
 
 ### 2. Funções Principais
+### [__init__()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L14)
+- Monta toda a interface gráfica.  
+- **Linhas**: 14-22
 
-- **init_ui:** Monta toda a interface gráfica.
-- **button_style:** Estilização de botões.
-- **load_file:** Abre diálogo para seleção do arquivo e inicia leitura e exibição do conteúdo.
-- **show_pdf_as_images:** Renderiza páginas do PDF como imagens.
-- **read_file:** Lê e extrai texto do arquivo selecionado.
-- **analyze_file:** Confirmação de análise, processa dados e exporta para CSV.
-- **processar_catalogo:** Analisa e categoriza os pacotes por seções e tipos de transporte.
-- **reset_app:** Limpa o estado do app para nova análise.
+### [init_ui()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L24)
+- Esta função monta todos os elementos da interface gráfica do aplicativo, organizando o layout principal e todos os componentes visuais como botões, áreas de texto, visualização de PDF e cabeçalhos.
+- **Linhas**: 24-84
+
+### [button_style()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L86)
+- Estilização de botões. 
+- **Linhas**: 86-91
+
+### [load_file()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L93)
+- Abre diálogo para seleção do arquivo e inicia leitura e exibição do conteúdo.
+-  Esta função abre o seletor de arquivos, permitindo que o usuário escolha um rquivo do tipo .docx ou .pdf. Após a seleção, ela processa e exibe o conteúdo do documento, habilitando o botão de análise.
+- **Linhas**: 93-108
+
+### [show_pdf_as_images()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L110)
+- Renderiza páginas do PDF como imagens.
+- Esta função renderiza as páginas de um documento PDF como imagens e as adiciona ao layout de visualização da interface gráfica.
+- **Linhas**: 110-123
+
+### [read_file()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L125)
+- Lê e extrai texto do arquivo selecionado.
+- **Linhas**: 125-131
+
+### [analyze_file()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L133)
+- Confirmação de análise, processa dados e exporta para CSV.
+- Esta função lida com a análise do texto extraído do documento carregado, exportando os dados processados para um arquivo CSV. Além disso, exibe caixas de diálogo para confirmar a análise e oferecer ao usuário a opção de realizar uma nova análise ou encerrar a aplicação.
+- **Linhas**: 133-187
+
+### [processar_catalogo()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L189)
+- Analisa e categoriza os pacotes por seções e tipos de transporte.
+- **Linhas**: 189-219
+
+### [reset_app()](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L221)
+- Limpa o estado do app para nova análise.
+-  Esta função reinicia os campos e o estado da interface gráfica do aplicativo, permitindo ao usuário iniciar uma nova análise a partir do zero.
+- **Linhas**: 221-231
+
+### [__name__ == '__main__'](https://github.com/profsandromesquita/PosIA/blob/35248c65ba8724a1e9026b75d59ad91b106820f3/PyTravelAPP/PyTravelAPP-1.0.py#L233)
+-   
+- **Linhas**: 233-237
+
 
 ---
 

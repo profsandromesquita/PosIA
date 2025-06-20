@@ -153,21 +153,27 @@ O PyTravelAPP foi projetado para facilitar a análise de pacotes de viagem comer
 ## Fluxo da Aplicação
 
 1. **Início:** Tela principal com logo, título e botão de seleção.
+   
    ![image](https://github.com/user-attachments/assets/c3a02a28-5c9f-4244-9680-1c726d882769)
 
 3. **Seleção de arquivo:** Usuário seleciona um `.docx` ou `.pdf`.
+   
    ![image](https://github.com/user-attachments/assets/b45bd8ee-63c7-48be-aafd-86ce155af57e)
 
 5. **Visualização:** Exibe o nome do arquivo, conteúdo extraído e, se PDF, miniaturas das páginas.
+   
    ![image](https://github.com/user-attachments/assets/f747339e-825b-43bd-9dba-18e37635c6f6)
 
 7. **Análise:** Usuário confirma análise, dados são processados e categorizados.
+   
    ![image](https://github.com/user-attachments/assets/c9edf5b3-105a-4f5d-80a9-4054b85714e9)
 
 9. **Exportação:** Usuário escolhe local para salvar o CSV.
+    
     ![image](https://github.com/user-attachments/assets/b2e87a79-0d47-41fb-b9da-74592ce8bb49)
 
 11. **Reinício/Ou Encerrar:** Usuário pode reiniciar para novo arquivo ou fechar o app.
+    
     ![image](https://github.com/user-attachments/assets/f3d465bc-fb34-40dc-b382-b209be837efa)
 
 

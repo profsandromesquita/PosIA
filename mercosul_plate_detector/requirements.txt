@@ -1,0 +1,29 @@
+# Requisitos para o Sistema de Deteccao de Placas do Mercosul
+
+# Core
+numpy>=1.21.0
+
+# Computer Vision
+opencv-python>=4.5.0
+opencv-python-headless>=4.5.0  # Alternativa sem GUI
+
+# Deep Learning (deteccao YOLO)
+ultralytics>=8.0.0
+torch>=1.9.0
+torchvision>=0.10.0
+
+# OCR
+easyocr>=1.6.0
+pytesseract>=0.3.8
+
+# Image Processing
+Pillow>=8.0.0
+
+# Utilities
+tqdm>=4.60.0
+pyyaml>=5.4.0
+
+# Optional - para desenvolvimento
+# pytest>=6.0.0
+# black>=21.0
+# flake8>=3.9.0

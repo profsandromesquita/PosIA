@@ -18,6 +18,8 @@ Autor: Pós-graduação IA - UniAteneu
 
 import os
 import sys
+import platform
+import glob as glob_mod
 import cv2
 import numpy as np
 
@@ -43,6 +45,28 @@ MIN_SIZE = (80, 80)
 FACE_WIDTH = 200
 FACE_HEIGHT = 200
 
+# Backends de captura para tentar (em ordem de prioridade por SO)
+if platform.system() == "Windows":
+    BACKENDS = [
+        ("DirectShow", cv2.CAP_DSHOW),
+        ("MSMF", cv2.CAP_MSMF),
+        ("Default", cv2.CAP_ANY),
+    ]
+elif platform.system() == "Linux":
+    BACKENDS = [
+        ("V4L2", cv2.CAP_V4L2),
+        ("GStreamer", cv2.CAP_GSTREAMER),
+        ("Default", cv2.CAP_ANY),
+    ]
+else:  # macOS
+    BACKENDS = [
+        ("AVFoundation", cv2.CAP_AVFOUNDATION),
+        ("Default", cv2.CAP_ANY),
+    ]
+
+# Indices de camera para tentar
+CAMERA_INDICES = [0, 1, 2]
+
 
 # ---------------------------------------------------------------------------
 # Funcoes auxiliares
@@ -67,6 +91,74 @@ def recortar_rosto(imagem_gray, x, y, w, h):
     """Recorta e redimensiona um rosto detectado."""
     rosto = imagem_gray[y : y + h, x : x + w]
     return cv2.resize(rosto, (FACE_WIDTH, FACE_HEIGHT))
+
+
+def diagnosticar_camera():
+    """Exibe informacoes de diagnostico sobre cameras disponiveis."""
+    print("\n[DIAGNOSTICO] Verificando cameras disponiveis...")
+    print(f"  Sistema Operacional: {platform.system()} {platform.release()}")
+    print(f"  OpenCV versao: {cv2.__version__}")
+
+    # No Linux, verificar dispositivos de video
+    if platform.system() == "Linux":
+        dispositivos = glob_mod.glob("/dev/video*")
+        if dispositivos:
+            print(f"  Dispositivos encontrados: {', '.join(sorted(dispositivos))}")
+            for dev in sorted(dispositivos):
+                permissao = os.access(dev, os.R_OK)
+                print(f"    {dev} - leitura: {'OK' if permissao else 'SEM PERMISSAO'}")
+            if not all(os.access(d, os.R_OK) for d in dispositivos):
+                print("\n  [DICA] Para liberar permissao, execute:")
+                print("    sudo usermod -aG video $USER")
+                print("    (depois faca logout e login novamente)")
+        else:
+            print("  Nenhum dispositivo /dev/video* encontrado.")
+            print("\n  [DICA] Possiveis solucoes:")
+            print("    - Verifique se a webcam esta conectada")
+            print("    - Tente: sudo modprobe uvcvideo")
+            print("    - Verifique: lsusb | grep -i cam")
+
+    # No Windows
+    elif platform.system() == "Windows":
+        print("  [DICA] Possiveis solucoes:")
+        print("    - Verifique se a webcam esta ativada no Gerenciador de Dispositivos")
+        print("    - Feche outros programas que usam a camera (Teams, Zoom, etc.)")
+        print("    - Verifique Configuracoes > Privacidade > Camera")
+
+    # Tentar abrir com cada combinacao de indice e backend
+    print("\n  Tentando combinacoes de indice/backend:")
+    for idx in CAMERA_INDICES:
+        for nome_backend, backend in BACKENDS:
+            cap = cv2.VideoCapture(idx, backend)
+            if cap.isOpened():
+                ret, frame = cap.read()
+                if ret and frame is not None:
+                    h, w = frame.shape[:2]
+                    print(f"    [OK] Indice {idx} + {nome_backend}: {w}x{h}")
+                else:
+                    print(f"    [--] Indice {idx} + {nome_backend}: abriu mas sem frame")
+                cap.release()
+            else:
+                print(f"    [--] Indice {idx} + {nome_backend}: nao abriu")
+    print()
+
+
+def abrir_camera():
+    """
+    Tenta abrir a webcam testando multiplos indices e backends.
+    Retorna (cap, descricao) ou (None, mensagem_de_erro).
+    """
+    for idx in CAMERA_INDICES:
+        for nome_backend, backend in BACKENDS:
+            cap = cv2.VideoCapture(idx, backend)
+            if cap.isOpened():
+                ret, frame = cap.read()
+                if ret and frame is not None:
+                    print(f"[INFO] Camera aberta: indice {idx}, backend {nome_backend}")
+                    return cap, f"indice {idx} ({nome_backend})"
+                cap.release()
+
+    return None, "Nenhuma camera disponivel"
 
 
 def carregar_mapa_labels():
@@ -155,9 +247,10 @@ def cadastrar_por_webcam(nome, num_capturas=10):
     os.makedirs(pasta_pessoa, exist_ok=True)
     qtd_existente = len(os.listdir(pasta_pessoa))
 
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
+    cap, desc = abrir_camera()
+    if cap is None:
         print("[ERRO] Nao foi possivel abrir a webcam.")
+        print("[INFO] Execute a opcao 6 (Diagnosticar camera) para mais detalhes.")
         return False
 
     print(f"[INFO] Capturando {num_capturas} fotos de '{nome}'.")
@@ -282,9 +375,10 @@ def reconhecer_em_tempo_real(confianca_minima=70):
     recognizer.read(MODELO_PATH)
     mapa_labels = np.load(LABELS_PATH, allow_pickle=True).item()
 
-    cap = cv2.VideoCapture(0)
-    if not cap.isOpened():
+    cap, desc = abrir_camera()
+    if cap is None:
         print("[ERRO] Nao foi possivel abrir a webcam.")
+        print("[INFO] Execute a opcao 6 (Diagnosticar camera) para mais detalhes.")
         return
 
     print("[INFO] Reconhecimento facial iniciado.")
@@ -372,6 +466,7 @@ def menu():
         print("  3. Treinar modelo")
         print("  4. Reconhecimento em tempo real")
         print("  5. Listar pessoas cadastradas")
+        print("  6. Diagnosticar camera")
         print("  0. Sair")
         print("=" * 50)
 
@@ -410,6 +505,9 @@ def menu():
 
         elif opcao == "5":
             listar_cadastrados()
+
+        elif opcao == "6":
+            diagnosticar_camera()
 
         elif opcao == "0":
             print("[INFO] Encerrando o sistema. Ate logo!")
